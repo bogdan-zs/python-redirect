@@ -1,0 +1,1 @@
+web: flask initdb; gunicorn redirect:app
