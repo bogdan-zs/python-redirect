@@ -1,5 +1,6 @@
 from flask import (render_template, jsonify, request, redirect)
 from urllib.parse import urlparse
+import validators
 import psycopg2
 import re
 
@@ -12,10 +13,13 @@ def index():
   links = link.all()
   return render_template('index.html', links=links)
 
+INVALID_MESSAGE = 'invalid link'
 @app.route('/', methods=['POST'])
 def transform_url():
   conn = get_db()
   link_from_user = request.form.get('link')
+  if not validators.url(link_from_user):
+    return jsonify({'error': INVALID_MESSAGE}), 400
   random_string = randomString()
 
   try:

@@ -41,8 +41,8 @@
     <input type="text" name="link" />
     <input type="submit" />
   </form>
-  <a href="#" id="info" target="_blank">
-  </a>
+  <a href="#" id="info" target="_blank"></a>
+  <div id="error"></div>
   <div class="links-table">
     <table border="1" id="tableBody">
       <thead>
@@ -65,6 +65,7 @@
     form.addEventListener('submit', ev => {
       const form = document.getElementById('form');
       const info = document.getElementById('info');
+      const error = document.getElementById('error');
       const tableBody = document.getElementById('tableBody');
       const body = new FormData(form);
 
@@ -72,6 +73,11 @@
       fetch('/', { method: 'POST', body })
       .then(res => res.json())
       .then(res => {
+        if (res.error){
+          error.innerHTML = res.error;
+          return;
+        }
+
         info.href = res['link'];
         info.innerHTML = res['link'];
         const tr = document.createElement('tr');
@@ -83,7 +89,9 @@
         });
         tableBody.appendChild(tr);
       })
-      .catch(res => info.innerHTML = 'Error');
+      .catch(res => {
+        info.innerHTML = 'Error'
+      });
     })
   </script>
 </body>
