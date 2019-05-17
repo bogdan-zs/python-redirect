@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body {
+      position: fixed;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+    }
+    #info {
+      width: 100%;
+      text-align: center;
+    }
+    table {
+      margin: 10px;
+      border-collapse: collapse;
+    }
+    td {
+      padding: 10px;
+    }
+    .links-table {
+      max-width: 1000px;
+      overflow: scroll;
+      max-height: 700px;
+    }
+  </style>
+</head>
+<body>
+  <form action="/" method="POST" id="form">
+    <label>Link:</label>
+    <input type="text" name="link" />
+    <input type="submit" />
+  </form>
+  <a href="#" id="info" target="_blank">
+  </a>
+  <div class="links-table">
+    <table border="1" id="tableBody">
+      <thead>
+        <th>Short Link</th>
+        <th>Link</th>
+        <th>Clicks</th>
+      </thead>
+      <tbody>
+      {% for l in links %}
+      <tr>
+        <td>{{ l[0] }}</td>
+        <td>{{ l[1] }}</td>
+        <td>{{ l[2] }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <script>
+    form.addEventListener('submit', ev => {
+      const form = document.getElementById('form');
+      const info = document.getElementById('info');
+      const tableBody = document.getElementById('tableBody');
+      const body = new FormData(form);
+
+      ev.preventDefault();
+      fetch('/', { method: 'POST', body })
+      .then(res => res.json())
+      .then(res => {
+        info.href = res['link'];
+        info.innerHTML = res['link'];
+        const tr = document.createElement('tr');
+
+        ['link', 'long_link', 'clicks'].forEach(key => {
+          const td = document.createElement('td');
+          td.innerHTML = res[key];
+          tr.appendChild(td);
+        });
+        tableBody.appendChild(tr);
+      })
+      .catch(res => info.innerHTML = 'Error');
+    })
+  </script>
+</body>
+</html>
