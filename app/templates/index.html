@@ -2,70 +2,90 @@
 <html lang="en">
 
 <head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
-    body {
-      position: fixed;
-      height: 100%;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    .conteiner {
+      background: #305f72;
+      color: #f6f5f5;
       flex-direction: column;
-      margin: 0;
-      padding: 0;
+      padding: 0 100px;
+    }
+    a {
+      color: #a9eec2;
+    }
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 500px;
     }
 
     #info {
-      width: 100%;
-      text-align: center;
+      background: #0c084c;
+      border-radius: 10px;
+      max-width: 300px;
+      padding: 20px;
+      margin: 0 auto;
     }
 
-    table {
-      margin: 10px;
-      border-collapse: collapse;
+    #tableBody {
+      color: #f6f5f5;
     }
 
-    td {
-      padding: 10px;
+    #tableBody td {
+      word-break: break-all;
     }
 
-    .links-table {
+    .table-container {
       max-width: 1000px;
-      overflow: scroll;
-      max-height: 700px;
+      height: 800px;
+      overflow-y: scroll;
+      margin: 0 auto;
     }
   </style>
 </head>
 
 <body>
-  <form action="/" method="POST" id="form">
-    <label>Link:</label>
-    <input type="text" name="link" />
-    <input type="submit" />
-  </form>
-  <a href="#" id="info" target="_blank"></a>
-  <div id="error"></div>
-  <div class="links-table">
-    <table border="1" id="tableBody">
-      <thead>
-        <th>Short Link</th>
-        <th>Link</th>
-        <th>Clicks</th>
-      </thead>
-      <tbody>
-        {% for l in links %}
-        <tr>
-          <td>{{ l[0] }}</td>
-          <td>{{ l[1] }}</td>
-          <td>{{ l[2] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="d-flex justify-content-center align-content-center conteiner">
+    <div class="form-container">
+      <form action="/" method="POST" id="form">
+        <div class="form-group row">
+          <label for="link" class="col-sm-12 col-form-label">Link:</label>
+          <div class="col-sm-12">
+            <input  class="form-control" placeholder="Enter your link..." type="text" name="link" id="link"/>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12 d-flex justify-content-center">
+            <button type="submit" class="btn btn-lg btn-primary">Get link</button>
+          </div>
+        </div>
+      </form>
+      <a href="#" id="info" target="_blank" hidden></a>
+      <div id="error"></div>
+    </div>
+    <div class="table-container">
+      <table border="1" id="tableBody" class="table">
+        <thead class="thead-light">
+          <th>Short Link</th>
+          <th>Link</th>
+          <th>Clicks</th>
+        </thead>
+        <tbody>
+          {% for l in links %}
+          <tr>
+            <td><a href="{{l[0]}}" target="_blank">{{ l[0] }}</a></td>
+            <td>{{ l[1] }}</td>
+            <td>{{ l[2] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
   <script>
     form.addEventListener('submit', ev => {
@@ -87,11 +107,19 @@
 
           info.href = res['link'];
           info.innerHTML = res['link'];
+          info.hidden = false;
           const tr = document.createElement('tr');
 
           ['link', 'long_link', 'clicks'].forEach(key => {
             const td = document.createElement('td');
-            td.innerHTML = res[key];
+            if (key === 'link' ) {
+              const a = document.createElement('a');
+              a.innerHTML = res[key];
+              a.href      = res[key];
+              td.appendChild(a);
+            } else {
+              td.innerHTML = res[key];
+            }
             tr.appendChild(td);
           });
           tableBody.appendChild(tr);

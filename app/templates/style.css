@@ -1,0 +1,31 @@
+body {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+#info {
+  width: 100%;
+  text-align: center;
+}
+
+table {
+  margin: 10px;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 10px;
+}
+
+.links-table {
+  max-width: 1000px;
+  overflow: scroll;
+  max-height: 700px;
+}
